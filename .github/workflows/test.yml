@@ -20,23 +20,10 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Set up Docker Compose
-      uses: docker/compose-action@v2.1.1
-
-    - name: Check Docker Compose Version
-      run: docker-compose --version
+      uses: docker/setup-qemu-action@v2
 
     - name: Copy .env.example to .env
       run: cp ./Integ-tests/.env.example ./Integ-tests/.env
 
-    - name: Install Node.js dependencies
-      run: npm ci
-
-    - name: Start Docker Compose services
-      run: docker-compose -f ./Integ-tests/docker-compose.yml up -d
-
     - name: Run integration script
       run: cd Integ-tests && npm run test:integration
-
-    - name: Stop Docker Compose services
-      if: always()
-      run: docker-compose -f ./Integ-tests/docker-compose.yml down
